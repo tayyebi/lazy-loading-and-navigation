@@ -1,16 +1,17 @@
-=== AJAX Page Loader ===
+=== Lazy Loading and Navigation ===
 Contributors: tayyebi
 Tags: ajax, page loader, jquery, dynamic loading
 Requires at least: 4.0
-Tested up to: 6.3
+Tested up to: 6.8
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AJAX Page Loader is a lightweight plugin that dynamically loads page content via AJAX with an integrated loading indicator. It also manages browser history for back/forward navigation and fires custom events when content is loaded.
+AJAX Page Loader allows you to navigate smoothly between pages.
 
 == Description ==
-AJAX Page Loader allows you to update sections of your website without reloading the entire page. The plugin uses jQuery to fetch HTML content, extract the main content area as well as the page title, update the visible section, and maintain browser history. This is ideal for creating a faster, more dynamic user experience.
+
+AJAX Page Loader is a lightweight plugin that dynamically loads page content via AJAX with an integrated loading indicator.
 
 == Installation ==
 1. Upload the `ll-navigation` folder to your `/wp-content/plugins/` directory.
