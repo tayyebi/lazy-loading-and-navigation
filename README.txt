@@ -14,7 +14,7 @@ AJAX Page Loader allows you to navigate smoothly between pages.
 AJAX Page Loader is a lightweight plugin that dynamically loads page content via AJAX with an integrated loading indicator.
 
 == Installation ==
-1. Upload the `ll-navigation` folder to your `/wp-content/plugins/` directory.
+1. Upload the `lazy-loading-and-navigation` folder to your `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. To initiate an AJAX page load, call the function `AjaxPageLoader.loadPage('your-url')` in your custom JavaScript code.
 

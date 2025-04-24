@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Lazy Loading and Navigation
- * Plugin URI: https://github.com/tayyebi/ll-navigation
+ * Plugin URI: https://github.com/tayyebi/lazy-loading-and-navigation
  * Description: Loads page content via AJAX with a loading indicator.
- * Text Domain: ll-navigation
+ * Text Domain: lazy-loading-and-navigation
  * Version: 1.0.0
  * Author: MohammadReza Tayyebi
  * Author URI: https://gordarg.com
@@ -53,7 +53,7 @@ function apl_print_inline_script() {
         
         // Localized strings.
         var strings = {
-            "loading": "<?php echo esc_js( __( 'Loading', 'll-navigation' ) ); ?>"
+            "loading": "<?php echo esc_js( __( 'Loading', 'lazy-loading-and-navigation' ) ); ?>"
         };
 
         // Auto-detect the content container from common selectors.
