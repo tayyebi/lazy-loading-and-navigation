@@ -32,7 +32,7 @@ add_action( 'admin_menu', 'lazyloadnav_add_settings_page' );
 // Add a debug mode checkbox to the settings page.
 function lazyloadnav_render_settings_page() {
     $settings = get_option( 'lazyloadnav_settings', [
-        'container' => '#content',
+        'container' => '.wp-site-blocks',
         'fade_duration' => 300,
         'debug_mode' => false
     ] );
@@ -75,15 +75,20 @@ function lazyloadnav_enqueue_scripts() {
     );
 
     $settings = get_option( 'lazyloadnav_settings', [
-        'container' => '#content',
+        'container' => 'main',
         'fade_duration' => 300,
         'debug_mode' => false
     ] );
 
+    $localized_strings = [
+        'loading' => __( 'Loading', 'lazy-loading-and-navigation' )
+    ];
+
     $inline_script = "
         var lazyloadnav_settings = " . json_encode( $settings ) . ";
+        var lazyloadnav_strings = " . json_encode( $localized_strings ) . ";
     ";
-    wp_add_inline_script( 'lazyloadnav-script', $inline_script );
+    wp_add_inline_script( 'lazyloadnav-script', $inline_script, 'before' );
 
     wp_enqueue_script( 'lazyloadnav-script' );
 }

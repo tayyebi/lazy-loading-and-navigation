@@ -1,6 +1,6 @@
 (function($) {
     var lazyloadnav_fadeDuration = lazyloadnav_settings.fade_duration || 300;
-    var lazyloadnav_containerSelector = lazyloadnav_settings.container || '#content';
+    var lazyloadnav_containerSelector = lazyloadnav_settings.container || 'main';
     var lazyloadnav_debugMode = lazyloadnav_settings.debug_mode || false;
 
     var lazyloadnav_AjaxPageLoader = {
@@ -11,11 +11,7 @@
             }
             document.dispatchEvent(new CustomEvent('contentLoaded'));
             if (!$('#loading').length) {
-                $('body').append(
-                    '<div id="loading" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:#fff; padding:10px; border:1px solid #ccc; z-index:1000;">' +
-                    lazyloadnav_strings.loading + ' ...' +
-                    '</div>'
-                );
+                $('body').append('<div id="loading"></div>');
             }
         },
         showLoading: function() {
@@ -50,7 +46,10 @@
                     }
                     if (newContent) {
                         $(lazyloadnav_containerSelector).fadeOut(lazyloadnav_fadeDuration, function() {
-                            $(this).html(newContent).fadeIn(lazyloadnav_fadeDuration);
+                            $(this).html(newContent).fadeIn(lazyloadnav_fadeDuration, function() {
+                                // Smoothly scroll to the top after content is loaded.
+                                $('html, body').animate({ scrollTop: 0 }, lazyloadnav_fadeDuration);
+                            });
                         });
                     }
                     lazyloadnav_AjaxPageLoader.hideLoading();
