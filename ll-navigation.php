@@ -14,7 +14,19 @@ defined( 'ABSPATH' ) or die( 'No direct access please!' );
 
 // Add a settings page to the WordPress admin panel.
 function lazyloadnav_register_settings() {
-    register_setting( 'lazyloadnav_settings_group', 'lazyloadnav_settings' );
+    register_setting( 'lazyloadnav_settings_group', 'lazyloadnav_settings', [
+        'sanitize_callback' => 'lazyloadnav_sanitize_settings'
+    ] );
+}
+
+function lazyloadnav_sanitize_settings( $settings ) {
+    $sanitized_settings = [];
+
+    $sanitized_settings['container'] = sanitize_text_field( $settings['container'] );
+    $sanitized_settings['fade_duration'] = absint( $settings['fade_duration'] );
+    $sanitized_settings['debug_mode'] = isset( $settings['debug_mode'] ) ? (bool) $settings['debug_mode'] : false;
+
+    return $sanitized_settings;
 }
 add_action( 'admin_init', 'lazyloadnav_register_settings' );
 
