@@ -2,7 +2,7 @@ name: Deploy to WordPress SVN
 
 on:
   push:
-    branches:
+    tags:
       - "*"  # Trigger on any tag creation
 
 jobs:
@@ -69,6 +69,7 @@ jobs:
           cd svn
           # Extract the tag name (e.g. from refs/tags/v1.0.0 remove the prefix)
           TAG=${GITHUB_REF#refs/tags/}
+          echo "TAG: $TAG"
           svn commit --username "${{ env.SVN_USERNAME }}" --password "${{ env.SVN_PASSWORD }}" \
             --non-interactive --trust-server-cert \
             -m "Deploying version $TAG"
