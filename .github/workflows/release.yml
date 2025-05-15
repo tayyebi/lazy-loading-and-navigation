@@ -34,7 +34,11 @@ jobs:
       - name: Install Subversion
         run: |
             sudo apt-get update && sudo apt-get install -y subversion
-            sudo apt-get intall tree
+
+      - name: Install tree
+        run: |
+            sudo apt-get install -y tree
+
 
       - name: Checkout WordPress SVN repository
         run: |
