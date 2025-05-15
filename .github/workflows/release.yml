@@ -1,0 +1,74 @@
+name: Deploy to WordPress SVN
+
+on:
+  push:
+    branches:
+      - "*"  # Trigger on any tag creation
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME  }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD  }}
+      SLUG: lazy-loading-and-navigation
+
+    steps:
+      - name: Checkout Git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Export Environment Variables
+        run: |
+          export SVN_USERNAME=${{ env.SVN_USERNAME  }}
+          export SVN_PASSWORD=${{ env.SVN_PASSWORD }}
+          export SLUG=${{ env.SLUG }}
+
+      - name: Debug Environment Variables
+        run: |
+          echo "SLUG is ${{ env.SLUG }}"
+          echo "SVN_USERNAME is ${{ env.SVN_USERNAME }}"
+          # Note: SVN_USERNAME and SVN_PASSWORD won't be printed in full, they will appear as '***'
+
+      - name: Install Subversion
+        run: |
+            sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Checkout WordPress SVN repository
+        run: |
+          svn checkout "https://plugins.svn.wordpress.org/${{ env.SLUG }}" svn \
+            --username "${{ env.SVN_USERNAME }}" --password "${{ env.SVN_PASSWORD }}" \
+            --non-interactive --trust-server-cert
+
+      - name: Clean SVN trunk directory
+        run: rm -rf svn/trunk/*
+
+      - name: Copy project files to SVN trunk
+        run: |
+          # Copy all files you want to deploy, excluding Git metadata and other nonessential folders.
+          rsync -rc --exclude='.git*' --exclude='.github' --exclude='.wordpress-org' ./ svn/trunk/
+
+      - name: Copy WP assets
+        run: |
+          # Create or update the assets folder with your .wordpress-org directory content.
+          mkdir -p svn/assets
+          rsync -rc --delete .wordpress-org/ svn/assets/
+
+      - name: Add new and remove deleted files in SVN working copy
+        run: |
+          cd svn
+          # Add new files in trunk and assets
+          svn add --force trunk --auto-props --parents --depth infinity || true
+          svn add --force assets --auto-props --parents --depth infinity || true
+          # Delete missing files from SVN
+          svn status | grep '^\!' | awk '{print $2 }}' | xargs svn delete || true
+
+      - name: Commit changes to WordPress SVN
+        run: |
+          cd svn
+          # Extract the tag name (e.g. from refs/tags/v1.0.0 remove the prefix)
+          TAG=${GITHUB_REF#refs/tags/}
+          svn commit --username "${{ env.SVN_USERNAME }}" --password "${{ env.SVN_PASSWORD }}" \
+            --non-interactive --trust-server-cert \
+            -m "Deploying version $TAG"
