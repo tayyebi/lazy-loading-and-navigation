@@ -75,7 +75,8 @@ jobs:
       - name: Commit changes to WordPress SVN
         run: |
           cd svn
-
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "TAG: $TAG"
           svn commit --username "${{ env.SVN_USERNAME }}" --password "${{ env.SVN_PASSWORD }}" \
             --non-interactive --trust-server-cert \
             -m "Deploying version $TAG"
